@@ -1,6 +1,6 @@
-import { LanguageOptionProps } from "@/interfaces/CommonInterfaces";
+import { LanguageOption } from "@/interfaces/CommonInterfaces";
 
-export const languageOptions: LanguageOptionProps[] = [
+export const languageOptions: LanguageOption[] = [
     {
         id: 1,
         name: "JavaScript (Node.js 12.14.0)",

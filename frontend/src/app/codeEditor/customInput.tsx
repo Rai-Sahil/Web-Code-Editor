@@ -1,5 +1,5 @@
 import React from "react";
-import { classnames } from "@/contants/general";
+import { classnames } from "@/utils/general";
 import { CustomInputProps } from "@/interfaces/CommonInterfaces";
 
 export const CustomInput: React.FC<CustomInputProps> = ({ customInput, setCustomInput }) => {

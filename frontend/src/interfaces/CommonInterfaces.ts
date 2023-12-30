@@ -2,7 +2,7 @@ export interface CodeEditorProps {
     language: string;
 }
 
-export interface LanguageOptionProps {
+export interface LanguageOption {
     id: number;
     name: string;
     value: string;

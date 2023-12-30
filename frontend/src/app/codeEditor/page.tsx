@@ -5,8 +5,8 @@ import CodeEditor from "./codeEditor"
 import { ToastContainer, toast } from "react-toastify";
 import React, { useState } from "react";
 import { languageOptions } from "@/contants/languageOptions";
-import { LanguageOptionProps } from "@/interfaces/CommonInterfaces";
-import { classnames } from "@/contants/general";
+import { LanguageOption } from "@/interfaces/CommonInterfaces";
+import { classnames } from "@/utils/general";
 import { OutputWindow } from "./outputWindow";
 import { CustomInput } from "./customInput";
 
@@ -29,7 +29,7 @@ export default function CodeEditorPage() {
     const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(false);
 
-    const onSelectLanguage = (desiredLanguage: LanguageOptionProps): void => {
+    const onSelectLanguage = (desiredLanguage: LanguageOption): void => {
         console.log('selected language is...', desiredLanguage);
         setLanguage(desiredLanguage);
     }
