@@ -7,7 +7,7 @@ export const OutputWindow: React.FC = () => {
                 Output
             </h1>
             <div className="w-full h-56 bg-[#1e293b] rounded-md text-white font-normal text-sm overflow-y-auto">
-                {null}
+                { null }
             </div>
         </>
     )
