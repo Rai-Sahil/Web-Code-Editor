@@ -2,7 +2,7 @@ import React from "react";
 import { classnames } from "@/contants/general";
 import { CustomInputProps } from "@/interfaces/CommonInterfaces";
 
-export const CustomInput = ({ customInput, setCustomInput }: CustomInputProps) => {
+export const CustomInput: React.FC<CustomInputProps> = ({ customInput, setCustomInput }) => {
     return (
         <>
             {" "}

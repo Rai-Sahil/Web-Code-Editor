@@ -12,7 +12,7 @@ import { CustomInput } from "./customInput";
 
 const javascriptDefault = `// comments`;
 
-const handleCompiler = async () => {
+const handleCompiler = async (): Promise<void> => {
     try {
         console.log('compiling code...');
         // TODO Add compiler logic here
@@ -21,7 +21,7 @@ const handleCompiler = async () => {
     }
 }
 
-export default function Page() {
+export default function CodeEditorPage() {
 
     const [language, setLanguage] = useState(languageOptions[0]);
     const [code, setCode] = useState(javascriptDefault);
@@ -29,7 +29,7 @@ export default function Page() {
     const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(false);
 
-    const onSelectLanguage = (desiredLanguage: LanguageOptionProps) => {
+    const onSelectLanguage = (desiredLanguage: LanguageOptionProps): void => {
         console.log('selected language is...', desiredLanguage);
         setLanguage(desiredLanguage);
     }
@@ -75,6 +75,7 @@ export default function Page() {
                             {processing ? "Processing..." : "Compile and Execute"}
                         </button>
                     </div>
+                    {outputDetails && <OutputWindow />}
                 </div>
             </div>
         </>
