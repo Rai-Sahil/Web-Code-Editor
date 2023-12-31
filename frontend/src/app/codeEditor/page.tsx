@@ -5,21 +5,14 @@ import CodeEditor from "./codeEditor"
 import { ToastContainer, toast } from "react-toastify";
 import React, { useState } from "react";
 import { languageOptions } from "@/contants/languageOptions";
-import { LanguageOption } from "@/interfaces/CommonInterfaces";
+import { LanguageOption, onChangeAction } from "@/interfaces/CommonInterfaces";
 import { classnames } from "@/utils/general";
 import { OutputWindow } from "./outputWindow";
 import { CustomInput } from "./customInput";
+import axios from "axios";
+import OutputDetails from "./outputDetails";
 
 const javascriptDefault = `// comments`;
-
-const handleCompiler = async (): Promise<void> => {
-    try {
-        console.log('compiling code...');
-        // TODO Add compiler logic here
-    } catch (err: any) {
-        toast.error(err.message);
-    }
-}
 
 export default function CodeEditorPage() {
 
@@ -32,6 +25,96 @@ export default function CodeEditorPage() {
     const onSelectLanguage = (desiredLanguage: LanguageOption): void => {
         console.log('selected language is...', desiredLanguage);
         setLanguage(desiredLanguage);
+    }
+
+    const checkStatus = async (token: string) => {
+        const options = {
+          method: "GET",
+          url: 'DUMMY' + "/" + token,
+          params: { base64_encoded: "true", fields: "*" },
+          headers: {
+            "X-RapidAPI-Host": 'DUMMY',
+            "X-RapidAPI-Key": 'DUMMY',
+          },
+        };
+        try {
+          let response = await axios.request(options);
+          let statusId = response.data.status?.id;
+    
+          // Processed - we have a result
+          if (statusId === 1 || statusId === 2) {
+            // still processing
+            setTimeout(() => {
+              checkStatus(token)
+            }, 2000)
+            return
+          } else {
+            setProcessing(false)
+            setOutputDetails(response.data)
+            //showSuccessToast(`Compiled Successfully!`)
+            console.log('response.data', response.data)
+            console.log('response.data.stdout', atob(response.data.stdout))
+            return
+          }
+        } catch (err) {
+          console.log("err", err);
+          setProcessing(false);
+          //showErrorToast();
+        }
+      };
+
+    const onChange = (action: string, data: string) => {
+        switch (action) {
+          case "code": {
+            setCode(data);
+            break;
+          }
+          default: {
+            console.warn("case not handled!", action, data);
+          }
+        }
+      };
+
+    const handleCompiler = async (): Promise<void> => {
+        try {
+            console.log("Code", code);
+            setProcessing(true);
+            const formData = {
+                language_id: language.id,
+                // encode source code in base64
+                source_code: btoa(code),
+                stdin: btoa(customInput),
+            };
+
+            const options = {
+                method: "POST",
+                url: 'DUMMY',
+                params: { base64_encoded: "true", fields: "*" },
+                headers: {
+                    "content-type": "application/json",
+                    "Content-Type": "application/json",
+                    "X-RapidAPI-Host": 'DUMMY',
+                    "X-RapidAPI-Key": 'DUMMY',
+                },
+                data: formData,
+            };
+
+            axios
+                .request(options)
+                .then(function (response) {
+                    console.log("res.data", response);
+                    const token = response.data.token;
+                    console.log("token", token);
+                    checkStatus(token);
+                })
+                .catch((err) => {
+                    let error = err.response ? err.response.data : err;
+                    setProcessing(false);
+                    console.log(error);
+                });
+        } catch (err: any) {
+            toast.error(err.message);
+        }
     }
 
     return (
@@ -55,15 +138,15 @@ export default function CodeEditorPage() {
             </div>
             <div className="flex flex-row space-x-4 items-start px-4 py-4">
                 <div className="flex flex-col w-full h-full justify-start items-end">
-                    <CodeEditor language={language.value} />
+                    <CodeEditor onChange={ onChange } code={ code } language={ language.value } />
                 </div>
 
                 <div className="right-container flex flex-shrink-0 w-[30%] flex-col">
-                    <OutputWindow />
+                    <OutputWindow outputDetails={ outputDetails } />
                     <div className="flex flex-col items-end">
                         <CustomInput
-                            customInput={ customInput }
-                            setCustomInput={ setCustomInput }
+                            customInput={customInput}
+                            setCustomInput={setCustomInput}
                         />
                         <button
                             onClick={handleCompiler}
@@ -75,7 +158,7 @@ export default function CodeEditorPage() {
                             {processing ? "Processing..." : "Compile and Execute"}
                         </button>
                     </div>
-                    {outputDetails && <OutputWindow />}
+                    {outputDetails && <OutputDetails outputDetails={ outputDetails } />}
                 </div>
             </div>
         </>

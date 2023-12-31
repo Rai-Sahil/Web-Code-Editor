@@ -1,4 +1,13 @@
+type ActionType = "code" | "other";
+
+export interface onChangeAction {
+    action: string;
+    data: string;
+}
+
 export interface CodeEditorProps {
+    onChange: ( action: ActionType, data: string) => void;
+    code: string;
     language: string;
 }
 
