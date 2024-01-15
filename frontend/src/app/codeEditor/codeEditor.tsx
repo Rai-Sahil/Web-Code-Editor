@@ -21,12 +21,15 @@ export default function CodeEditor({ onChange, code, language, uniqueColabId }: 
   }
 
   const mountTesting = (editor: monacoEditor.editor.IStandaloneCodeEditor, monaco: Monaco) => {
-    editorRef.current = editor;
+    if (!editor) return;
+    if (typeof window !== 'undefined') {
+      editorRef.current = editor;
     const doc = new Y.Doc();
     const provider = new WebrtcProvider(uniqueColabId, doc);
     const type = doc.getText('monaco');
     const binding = new MonacoBinding(type, editorRef.current.getModel()!, new Set([editorRef.current]), provider.awareness);
     console.log('provider awareness', provider.awareness)
+    }
   }
 
   return (
