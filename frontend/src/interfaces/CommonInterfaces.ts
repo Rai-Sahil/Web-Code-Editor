@@ -9,6 +9,7 @@ export interface CodeEditorProps {
     onChange: ( action: ActionType, data: string) => void;
     code: string;
     language: string;
+    uniqueColabId: string;
 }
 
 export interface LanguageOption {
@@ -22,3 +23,9 @@ export interface CustomInputProps {
     customInput: string;
     setCustomInput: (customInput: string) => void;
 }
+
+export interface ICustomStyles {
+    overlay: React.CSSProperties;
+    content: React.CSSProperties;
+    closeButton: React.CSSProperties;
+  }
